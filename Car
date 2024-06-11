@@ -1,0 +1,88 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        while (true)
+        {
+            try
+            {
+                Console.WriteLine("Zadejte počet aut:");
+                int pocet_aut = Convert.ToInt32(Console.ReadLine());//Zadání aut
+                Console.WriteLine("Zadejte počet dalších parametrů (mimo ceny a ztráty):");
+                int pocetParametru = Convert.ToInt32(Console.ReadLine()); // Zadání počtu parametrů
+
+                string[] parametry = new string[pocetParametru];
+                for (int i = 0; i < pocetParametru; i++)
+                {
+                    Console.WriteLine($"Zadejte název parametru {i + 1}:");
+                    parametry[i] = Console.ReadLine(); // Zadání názvu parametru
+                }
+
+                string[] auta = new string[pocet_aut]; //Pole jednotlivých aut
+                double[] ceny = new double[pocet_aut]; //Pole cen
+                double[] ztraty = new double[pocet_aut]; //Pole procentuálních ztrát
+                double[] hodnotaAut = new double[pocet_aut]; //Pole hodnot auta
+                string[,] dalsiParametry = new string[pocet_aut, pocetParametru]; // Pole pro další parametry
+
+                Console.WriteLine("Zadejte, jak dlouho chcete, aby se hodnota auta snižovala:");
+                int pocetLet = Convert.ToInt32(Console.ReadLine());//Zadání, jak dlouho se bude hodnota snižovat
+
+                // Zadávání údajů o autech
+                for (int i = 0; i < pocet_aut; i++)
+                {
+                    Console.WriteLine($"Zadejte název {i + 1}. auta:");
+                    auta[i] = Console.ReadLine(); //Zadávání názvu aut
+
+                    Console.WriteLine($"Zadejte cenu {i + 1}. auta:");
+                    ceny[i] = Convert.ToDouble(Console.ReadLine()); //Zadávání ceny auta
+
+                    Console.WriteLine($"Zadejte procentuální ztrátu {i + 1}. auta:");
+                    ztraty[i] = Convert.ToDouble(Console.ReadLine()); //Zadávání procentuální ztráty
+
+                    for (int j = 0; j < pocetParametru; j++)
+                    {
+                        Console.WriteLine($"Zadejte {parametry[j]} pro {i + 1}. auto:");
+                        dalsiParametry[i, j] = Console.ReadLine(); // Zadávání dalších parametrů
+                    }
+
+                    // Inicializace počáteční hodnoty auta
+                    hodnotaAut[i] = ceny[i];
+                }
+
+                // Výpis názvů aut vedle sebe
+                Console.WriteLine("Názvy aut:");
+                for (int i = 0; i < pocet_aut; i++)
+                {
+                    Console.Write($"          {auta[i],-15}");
+                    Console.Write($"Cena: {ceny[i],-10:C}  ");
+                    for (int j = 0; j < pocetParametru; j++)
+                    {
+                        Console.Write($"{parametry[j]}: {dalsiParametry[i, j],-15}");
+                    }
+                    Console.WriteLine();
+                }
+
+                // Výpis hodnot pro každý rok
+                for (int rok = 1; rok <= pocetLet; rok++)
+                {
+                    Console.WriteLine($"\nRok {rok}:");
+
+                    for (int i = 0; i < pocet_aut; i++)
+                    {
+                        Console.Write($"| Ztráta: {ztraty[i],-8}% | Hodnota: {hodnotaAut[i],-10:C}  |||  ");
+                        double ztrataNaHodnote = hodnotaAut[i] * (ztraty[i] / 100); // Výpočet ztráty na hodnotě pro daný rok
+                        hodnotaAut[i] -= ztrataNaHodnote;
+                    }
+                    Console.WriteLine(); // Přidání mezery mezi jednotlivými řádky
+                }
+                break; // Ukončení smyčky po úspěšném provedení
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Zadali jste špatný údaj: {ex.Message}");
+            }
+        }
+    }
+}
